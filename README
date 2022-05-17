@@ -48,12 +48,6 @@ Passenger.cpp: This file has the implementation for the print function of the
                Passenger class. It is used in PassengerQueue.cpp, as it helps
                implement the PassengerQueue print function.
 
-unit_tests.h: This file contains the implementation of all of the test
-              functions designed to make sure that the program runs well. It
-              calls almost all the functions in the MetroSim and 
-              PassengerQueue, to ensure they are working, and then compares
-              the results to the intended results that I manually set.
-
 Makefile: This file contains all the compilation and linking commands that
           allows my program to be run and tested seamlessly. Without this file
           I would need to compile each header and cpp file individually.
@@ -77,14 +71,6 @@ MetroSim.cpp: Implementation of MetroSim class. Main functionality of running
               with passengers going on/off the train.
 
 MetroSim.h: Interface of MetroSim class.
-
-stations.txt: An example file containing a list of stations.
-
-test_commands.txt: Sample list of commands could be fed to the simulator.
-
-the_metroSim: Reference implementation for students to see how the program
-              should run and output.
-
 
 Data Structures: 
 
