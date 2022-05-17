@@ -1,0 +1,208 @@
+/**********************************************************
+* HW2: Metro Simulator
+* Comp 15
+* README
+* by Sean Liu, October 2021
+*
+*********************************************************/
+
+Compile/run:
+     - Compile using
+            make MetroSim
+     - run executable with
+            ./MetroSim stationsFile passFile [commands]
+
+
+Program Purpose:
+
+This homework assignment simulates a running train to accommodate
+passengers arriving/departing a metro.  Learn how to design and
+modularize code and work with documented libraries.
+
+
+Acknowledgements: Thanks to Zack Rummler for showing me how I was using the
+vector standard library functions incorrectly. Thanks to Sammie Chum for 
+answering my question about unit testing the enqueue function for the 
+PassengerQueue. I referred to my past Comp11 assignments for the file 
+input/output and the query function. Thanks to Professor Kazerounian for 
+teaching me how to make queues and how they work. Thanks to the TA who checked
+off my design! I didn't catch your name unfortunately.
+
+
+                                    Files:  
+
+PassengerQueue.h: The PassengerQueue class creates a queue to store Passengers
+                  and the stations for the MetroSim. The PassengerQueues
+                  enqueue and dequeue Passengers, and are stored in a vector 
+                  for the stations and the train.
+
+PassengerQueue.cpp: This file is the implementation of the functions that
+                   modify the PassengerQueue. This file is used in unit_test,
+                   because it tells the computer what to do when the functions
+                   from the header file are called.
+
+Passenger.h: The Passenger class creates an object to be stored in 
+             PassengerQueues, which are used for the stations and the train. 
+
+Passenger.cpp: This file has the implementation for the print function of the
+               Passenger class. It is used in PassengerQueue.cpp, as it helps
+               implement the PassengerQueue print function.
+
+unit_tests.h: This file contains the implementation of all of the test
+              functions designed to make sure that the program runs well. It
+              calls almost all the functions in the MetroSim and 
+              PassengerQueue, to ensure they are working, and then compares
+              the results to the intended results that I manually set.
+
+Makefile: This file contains all the compilation and linking commands that
+          allows my program to be run and tested seamlessly. Without this file
+          I would need to compile each header and cpp file individually.
+          Instead, I can run "unit_test" and everything will be compiled and 
+          linked together. This improves efficiency. Especially because the 
+          command will only compile files that have been newly modified,
+          instead of redundantly compiling everything.
+         
+README: This file. It provides additional information about the completion of 
+        this homework assignment. It gives context to why and what is 
+        happening in the initialization and implementation files.
+
+main.cpp: This file handles file reading, so that the user can run the program
+          properly, and even feed in pre-determined inputs if desired. It
+          calls the necessary functions from MetroSim.h to start the 
+          program, and coordinates it with the files provided when 
+          necessary.
+
+MetroSim.cpp: Implementation of MetroSim class. Main functionality of running
+              the Metro Simulation, should be able to move trains and deal
+              with passengers going on/off the train.
+
+MetroSim.h: Interface of MetroSim class.
+
+stations.txt: An example file containing a list of stations.
+
+test_commands.txt: Sample list of commands could be fed to the simulator.
+
+the_metroSim: Reference implementation for students to see how the program
+              should run and output.
+
+
+Data Structures: 
+
+The data structure used in this assignment was a queue. 
+
+For my implementation of MetroSim, I used vectors to create my queues. 
+I used vectors because they are dynamically sized, so I wouldn't have to worry
+too much about updating size and/or capacity when enqueueing and dequeueing 
+objects. Speaking of size, enqueuing, and dequeueing, those are almost all the
+operations that queues have. The limitations that queues present are great for
+the MetroSim! The abstraction barrier that queues provide makes our train work 
+efficiently.
+
+If we used an array list, we would have to iterate through all the elements 
+and update them individually if the front, for example, member got off the 
+train. Also, we might have needed to expand the array if there were too many 
+Passengers. An array would have been time and space inefficient.
+
+A linked list could have been better than the array list, as we would only
+need to update a couple of pointers, but the pointers could be updated
+incorrectly and the whole list would break.
+
+This is why queues worked so perfectly in this assignment. At the most basic
+level, to make our train work, we only need to be able to enqueue and dequeue
+Passengers. We enqueue them at their initial stations, and dequeue them at
+their destination. However, the size, isEmpty, and front functions also help a
+lot in optimizing our program. The size function made it easy to iterate
+through the PassengerQueues. This helped to board Passengers, since we needed
+to loop through the queue at each station, to enqueue each Passenger in the
+queue. I did not use isEmpty, but it could have been used for error messages
+if Passengers were not properly being enqueued into their queues. Lastly,
+front is useful in dequeuing. We do not have to specify which Passenger to
+remove each time, instead the program easily removes the Passenger in the 
+front of the queue. It also helps incrementing the Passenger IDs. Once a front
+Passenger, with the ID of 1, has been queued all the following Passengers get
+a subsequent ID.
+
+The first in, first out, i.e, FIFO, nature of queues also matches the
+nature of a train line. People who are waiting for the train in earlier stops,
+get on earlier, and presumably get off earlier. Although, this will not always
+be the case. Some Passengers may have longer trips. However, the FIFO nature
+still applies here. If multiple Passengers have the same final station, the
+Passenger who got on the train first will detrain first. Maybe they have been
+on the train for a while and need to rush to their destination? Or to the 
+bathroom? Not sure. This is beyond data structures at this point, but 
+hopefully you get the point!
+
+
+Testing:
+
+To test the enqueue and size functions, I created various Passengers and
+called enqueue for each of them. Then I asserted that the size of the test 
+PassengerQueue was equal to the amount of Passengers I created and enqueued. 
+I also called print at the end of the test function, which showed me that
+the PassengerQueue indeed contained all of the Passengers I created. Although,
+I deliberately initialized these Passengers without info, I noticed that 
+Passenger IDs were not being incremented. After consulting with Sammie,
+mentioned above, I figured that this was okay as my actual Passenger IDs were
+incremented separately in my implementation of MetroSim.
+
+To test the dequeue function, I created and enqueued two 
+Passengers into a PassengerQueue. I asserted that the size of the 
+PassengerQueue was two, and I printed it for visual confirmation. Then I
+called dequeue, printed the new PassengerQueue, and asserted that the size was
+now one. All went well.
+
+To test the PassengerQueue front function, I created and enqueued two 
+Passengers into a PassengerQueue. I asserted that the front was the Passenger
+ID of the first Passenger I enqueued. Then I called dequeue, and then asserted
+the front was the Passenger ID of the second Passenger I enqueued. This 
+ensures that front works for any non-empty PassengerQueue, and that it updates
+when the old front is removed. I also included a call to front right after my 
+PassengerQueue object was initialized, to see what would happen if front is 
+called when the PassengerQueue was empty. It failed the test, and printed 
+"Cannot get the front of an empty queue". Then I deleted this call, since I
+knew there was an error message and exit for when front is called incorrectly.
+
+To test the MetroSim constructor and file I/O, I attempted to run the program 
+multiple times with various bogus filenames, for both the station file and the
+commands file. Because I referred to my Comp11 for the I/O stream, all ran 
+smoothly.
+
+To test the getStations function, I passed in the default stations.txt file
+then called printSimulation so I could view all of the simulation. Everything
+looked right. I also created my own station files with various station names
+and of various sizes. When running the simulation with a smaller stations file
+than the default, I was alarmed that passengers stored at the first station and
+getting off at the second station did not get printed as on the train. But
+after looking at the_MetroSim, I was happy to find out that was standard. Also,
+the getStations function was working correctly, because the console was 
+printing the stations from the various station files correctly.
+
+To test the addToStation function, I hard-coded various Passengers, passed
+them into addToStation, then called printSimulation. All Passengers were
+correctly listed at their stations. 
+
+I tested metroMove similarly to addToStation. I hard-coded various Passengers,
+passed them into addToStation, and called printSimulation. Then I called
+metroMove, and called printSimulation again. I repeated this step multiple
+times to ensure that the train moved through all the stations. The passengers
+boarded and detrained perfectly!
+
+Before submitting, I diff tested my "test1.txt" and "test2.txt" files. 
+"test1.txt" was from the_MetroSim, and the "test2.txt" was from my MetroSim.
+
+
+Part that you found most difficult: 
+
+The most difficult part of the homework for me was starting from scratch. I
+felt great after my design checkoff, because I had a strong sense of direction
+and was ready to bring my design into fruition, but as I opened the files and
+looked over my pseudocode design I was overwhelmed. I forgot many details
+about public/private variables/functions and includes. It really distracted me
+from the bigger picture and frustrated me, which made my workflow much more 
+inefficient. I understand that we are supposed to learn how to program more
+independently, but maybe it would have been nice to start the habit in less
+time consuming settings, like lab.
+
+Time Spent:
+30 hours, maybe more!
+
